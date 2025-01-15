@@ -13,15 +13,13 @@ import java.util.*
 object CustomHeadUtil {
     fun getCustomHead(base64: String, displayName: String, lore: List<String> = listOf()): ItemStack {
         val skull = ItemStack(Material.valueOf("SKULL_ITEM"), 1)
-        skull.durability = 3 // Configuração necessária para cabeças de jogador na versão 1.8.8
+        skull.durability = 3
 
         val meta = skull.itemMeta as? SkullMeta ?: return skull
 
-        // Criar GameProfile com textura
         val profile = GameProfile(UUID.randomUUID(), "CustomHeadPlugin")
         profile.properties.put("textures", Property("textures", base64))
 
-        // Usar Reflection para injetar o GameProfile na SkullMeta
         try {
             val profileField = meta.javaClass.getDeclaredField("profile")
             profileField.isAccessible = true
@@ -30,7 +28,6 @@ object CustomHeadUtil {
             e.printStackTrace()
         }
 
-        // Configurar o nome do item
         meta.displayName = ChatColor.translateAlternateColorCodes('&', displayName)
         meta.lore = lore.map { ChatColor.translateAlternateColorCodes('&', it) }
 

@@ -9,7 +9,6 @@ object CustomItemUtil {
         val item = ItemStack(material)
         val meta = item.itemMeta ?: return item
 
-        // Adicionar nome e lore ao item
         meta.displayName = ChatColor.translateAlternateColorCodes('&', displayName)
         meta.lore = lore.map { ChatColor.translateAlternateColorCodes('&', it) }
 

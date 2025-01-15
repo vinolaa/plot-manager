@@ -42,7 +42,7 @@ class PlotGui {
                 else -> "&cTerreno Bloqueado"
             }
             val lore = when {
-                i < ownedPlots -> listOf("&fClique com o botão direito para...", "&fClique com o botão esquerdo para...")
+                i < ownedPlots -> listOf("&fBotão esquerdo: &7Teleportar-se", "&fBotão direito: &7Gerenciar plot")
                 i < maxPlots -> listOf("&fClique para comprar um terreno aleatório.")
                 else -> listOf("&fVocê não tem permissão para este número de plots.")
             }

@@ -1,15 +1,21 @@
 package ovinola.com.github.testePlotSquared.listeners
 
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.inventory.ItemStack
+import ovinola.com.github.testePlotSquared.PlotManager
+import ovinola.com.github.testePlotSquared.gui.ManagerGui
 import ovinola.com.github.testePlotSquared.gui.PlotGui
+import java.util.*
 
 class GuiClickListener : Listener {
+    private val awaitingPlayers = mutableMapOf<UUID, (Player, String) -> Unit>()
+    private val awaitingPlotIds = mutableMapOf<UUID, (Player, String, String) -> Unit>()
 
     @EventHandler
     fun onGuiClick(event: InventoryClickEvent) {
@@ -18,55 +24,152 @@ class GuiClickListener : Listener {
 
         if (event.inventory == PlotGui.guiInventory) {
             event.isCancelled = true
-        }
 
-        if (clickedItem != null && clickedItem.type == Material.CHEST) {
-            if (clickedItem.hasItemMeta() && clickedItem.itemMeta?.displayName == ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&aArmazém"
-                )
-            ) {
-                player.closeInventory()
-                player.performCommand("armazem")
-            }
-            return
-        }
+            val slot = event.slot
+            if (slot in 11..15) {
+                val plotNumber = slot - 10
 
-        if (clickedItem != null && clickedItem.type == Material.NETHER_STAR) {
-            if (clickedItem.hasItemMeta() && clickedItem.itemMeta?.displayName == ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&aMundo de Terrenos"
-                )
-            ) {
-                player.closeInventory()
-                player.performCommand("warp terrenos")
-            }
-            return
-        }
+                val displayName = clickedItem?.itemMeta?.displayName
 
-        if (clickedItem != null && clickedItem.type == Material.MINECART) {
-            if (clickedItem.hasItemMeta() && clickedItem.itemMeta?.displayName == ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&aAjuda/Comandos"
-                )
-            ) {
-                player.closeInventory()
-                player.performCommand("plots")
+                if (event.isLeftClick) {
+                    if (displayName != null && displayName.contains("Disponível")) {
+                        player.closeInventory()
+                        player.performCommand("plots h $plotNumber")
+                    } else if (displayName != null && displayName.contains("Bloqueado")) {
+                        player.closeInventory()
+                        player.sendMessage("§cVocê não tem permissão para este número de plots.")
+                    } else if (displayName != null && displayName.contains("Terreno")) {
+                        player.closeInventory()
+                        player.performCommand("plots auto")
+                    }
+                    return
+                } else if (event.isRightClick) {
+                    if (displayName != null && displayName.contains("Disponível")) {
+                        val managerGui = ManagerGui()
+                        managerGui.openGui(player, plotNumber)
+                    } else {
+                        return
+                    }
+                }
             }
-            return
-        }
 
-        if (clickedItem != null && clickedItem.type == Material.SIGN) {
-            if (clickedItem.hasItemMeta() && clickedItem.itemMeta?.displayName == ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&aInformações desse Terreno"
-                )
-            ) {
-                player.closeInventory()
-                player.performCommand("plots info")
+            if (clickedItem != null && clickedItem.hasItemMeta()) {
+                when (ChatColor.stripColor(clickedItem.itemMeta?.displayName)) {
+                    "Armazém" -> {
+                        player.closeInventory()
+                        player.performCommand("armazem")
+                    }
+                    "Mundo de Terrenos" -> {
+                        player.closeInventory()
+                        player.performCommand("warp terrenos")
+                    }
+                    "Ajuda/Comandos" -> {
+                        player.closeInventory()
+                        player.performCommand("plots")
+                    }
+                    "Informações desse Terreno" -> {
+                        player.closeInventory()
+                        player.performCommand("plots info")
+                    }
+                    "Visitar Jogador" -> {
+                        player.closeInventory()
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §anick §fdo jogador que deseja visitar no chat ou " +
+                                "§ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, target ->
+                            player.sendMessage("§fPor favor, digite " +
+                                    "o §aid §fda plot que deseja visitar no chat ou " +
+                                    "§ccancelar §fpara cancelar a operação.")
+                            awaitingPlotIds[player.uniqueId] = { _, _, plotId ->
+                                player.performCommand("plots visit $target $plotId")
+                            }
+                        }
+                    }
+                }
             }
-            return
+        }
+        else if (event.inventory == ManagerGui.manageGui) {
+            event.isCancelled = true
+
+            val displayName = clickedItem?.itemMeta?.displayName
+
+            if (displayName != null) {
+                when {
+                    displayName.contains("Adicionar Jogador") -> {
+                        player.closeInventory()
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §anick §fdo jogador que deseja adicionar no chat ou " +
+                                "§ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, targetPlayerName ->
+                            player.performCommand("plots trust $targetPlayerName")
+                        }
+                    }
+
+                    displayName.contains("Confiar Acesso") -> {
+                        player.closeInventory()
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §anick §fdo jogador que deseja confiar no chat ou" +
+                                " §ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, targetPlayerName ->
+                            player.performCommand("plots trust $targetPlayerName")
+                        }
+                    }
+                }
+            }
         }
     }
 
+    @EventHandler
+    fun onPlayerChat(event: AsyncPlayerChatEvent) {
+        val player = event.player
+
+        awaitingPlayers[player.uniqueId]?.let { action ->
+            event.isCancelled = true
+            val targetPlayerName = event.message
+
+            if (targetPlayerName.equals("cancelar", ignoreCase = true)) {
+                player.sendMessage("§cOperação cancelada.")
+                awaitingPlayers.remove(player.uniqueId)
+                return
+            }
+
+            Bukkit.getScheduler().runTask(PlotManager.instance) {
+                action(player, targetPlayerName)
+            }
+
+            awaitingPlayers.remove(player.uniqueId)
+            event.recipients.clear()
+        }
+
+        awaitingPlotIds[player.uniqueId]?.let { action ->
+            event.isCancelled = true
+            val plotId = event.message
+            val targetPlayerName = event.message
+
+            if (plotId.equals("cancelar", ignoreCase = true)) {
+                player.sendMessage("§cOperação cancelada.")
+                awaitingPlotIds.remove(player.uniqueId)
+                return
+            }
+
+            Bukkit.getScheduler().runTask(PlotManager.instance) {
+                action(player, targetPlayerName, plotId)
+            }
+
+            awaitingPlotIds.remove(player.uniqueId)
+            event.recipients.clear()
+        }
+    }
 }

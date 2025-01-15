@@ -4,10 +4,10 @@ import org.bukkit.plugin.java.JavaPlugin
 import ovinola.com.github.testePlotSquared.commands.PlotCommand
 import ovinola.com.github.testePlotSquared.listeners.GuiClickListener
 
-class TestePlotSquared : JavaPlugin() {
+class PlotManager : JavaPlugin() {
 
     companion object {
-        lateinit var instance: TestePlotSquared
+        lateinit var instance: PlotManager
             private set
     }
 
@@ -20,6 +20,8 @@ class TestePlotSquared : JavaPlugin() {
     }
 
     override fun onEnable() {
+        instance = this
+
         regCmds()
         regListeners()
     }
