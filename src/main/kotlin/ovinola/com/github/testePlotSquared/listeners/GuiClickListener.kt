@@ -159,6 +159,42 @@ class GuiClickListener : Listener {
                         player.closeInventory()
                         player.performCommand("plots clear")
                     }
+
+                    displayName.contains("Abandonar Terreno") -> {
+                        player.closeInventory()
+                        player.performCommand("plots delete")
+                    }
+
+                    displayName.contains("Definir Spawn") -> {
+                        player.closeInventory()
+                        player.performCommand("plots sethome")
+                    }
+
+                    displayName.contains("Definir Bioma") -> {
+                        player.closeInventory()
+                        player.performCommand("plots biome")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §abioma §fque deseja definir em sua plot no chat ou " +
+                                "§ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, biomeName ->
+                            if (biomeName.equals("cancelar", ignoreCase = true)) {
+                                player.sendMessage("§cOperação cancelada.")
+                                awaitingPlayers.remove(player.uniqueId)
+                            } else {
+                                player.performCommand("plots biome $biomeName")
+                                player.sendMessage("§aBioma definido com sucesso para: §f$biomeName")
+                            }
+                        }
+                    }
+
+                    displayName.contains("Voltar") -> {
+                        player.closeInventory()
+                        val plotGui = PlotGui()
+                        plotGui.openGui(player)
+                    }
                 }
             }
         }

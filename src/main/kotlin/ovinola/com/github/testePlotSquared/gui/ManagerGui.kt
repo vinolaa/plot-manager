@@ -79,11 +79,61 @@ class ManagerGui {
             )
         )
 
+        val deleteTerreno = CustomHeadUtil.getCustomHead(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzZmNDI0ZmJkZjc1ZjY3NWU4ZDI2YmVmZDI2ZDY0YzkwNjY3YWU1NGFjYzZkZjk0ZWExYjg0NjMzZmMxZGVkYyJ9fX0=",
+            "&aAbandonar Terreno",
+            listOf(
+                "",
+                "&fClique para abandonar o terreno",
+                "&fpermanentemente.",
+                "",
+                "&e&l| &cCuidado! Essa ação é &oirreversível."
+            )
+        )
+
+        val setSpawn = CustomHeadUtil.getCustomHead(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGRjMGY2ZjRiODFlZDc3YWJiYTVjODg1MjZmNTViNDZlNWE3ZDg4YjhjMDkzNWQ4ZGQyZWMyMjg3NTU4Nzk4MSJ9fX0=",
+            "&aDefinir Spawn",
+            listOf(
+                "",
+                "&fClique para setar o spawn",
+                "&fdo terreno.",
+                "",
+                "&e&l| &fEsse será o local onde",
+                "&e&l| &fos jogadores irão spawnar."
+            )
+        )
+
+        val setBioma = CustomHeadUtil.getCustomHead(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODI1MjE4YTM1ODI1MjAzYjdlNGRlNDY0ZmUyMmNkN2JiZDY0NzFiMWIyYmVmODZjNzkyOWYxZjgwNzI5OTZlIn19fQ==",
+            "&aDefinir Bioma",
+            listOf(
+                "",
+                "&fClique para setar o bioma",
+                "&fdo terreno.",
+                "",
+                "&e&l| &fEsse será o bioma do terreno."
+            )
+        )
+
+        val backArrow = CustomHeadUtil.getCustomHead(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY3ZGFkZjEwNjNiNGQ0NDE5ZWQ0YTVkOTAwNDU1NzU0OTg4YjIzNDE4YmFkOGNjYTJiZjc5NTBjMzA3MGFiZiJ9fX0=",
+            "&aVoltar",
+            listOf(
+                "",
+                "&fClique para voltar ao menu principal."
+            )
+        )
+
         inventory.setItem(11, addPlayer)
         inventory.setItem(12, trustPlayer)
         inventory.setItem(13, banPlayer)
         inventory.setItem(14, removePlayer)
         inventory.setItem(15, resetTerreno)
+        inventory.setItem(21, deleteTerreno)
+        inventory.setItem(22, setSpawn)
+        inventory.setItem(23, setBioma)
+        inventory.setItem(36, backArrow)
 
         player.openInventory(inventory)
     }
