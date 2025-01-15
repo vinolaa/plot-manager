@@ -126,6 +126,39 @@ class GuiClickListener : Listener {
                             player.performCommand("plots trust $targetPlayerName")
                         }
                     }
+
+                    displayName.contains("Banir Jogador") -> {
+                        player.closeInventory()
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §anick §fdo jogador que deseja banir no chat ou" +
+                                " §ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, targetPlayerName ->
+                            player.performCommand("plots deny $targetPlayerName ban")
+                        }
+                    }
+
+                    displayName.contains("Remover Jogador") -> {
+                        player.closeInventory()
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        player.sendMessage("§fPor favor, digite " +
+                                "o §anick §fdo jogador que deseja remover no chat ou" +
+                                " §ccancelar §fpara cancelar a operação.")
+                        player.sendMessage("")
+                        player.sendMessage("")
+                        awaitingPlayers[player.uniqueId] = { _, targetPlayerName ->
+                            player.performCommand("plots remove $targetPlayerName remove")
+                        }
+                    }
+
+                    displayName.contains("Resetar Terreno") -> {
+                        player.closeInventory()
+                        player.performCommand("plots clear")
+                    }
                 }
             }
         }
