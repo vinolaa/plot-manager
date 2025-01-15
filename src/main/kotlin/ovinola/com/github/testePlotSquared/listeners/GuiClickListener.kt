@@ -195,6 +195,31 @@ class GuiClickListener : Listener {
                         val plotGui = PlotGui()
                         plotGui.openGui(player)
                     }
+
+                    displayName.contains("Teleportar-se") -> {
+                        if (player.hasMetadata("plotNumber")) {
+                            val plotNumber = player.getMetadata("plotNumber")[0].asInt()
+                            player.closeInventory()
+                            player.performCommand("plots h $plotNumber")
+                        } else {
+                            player.sendMessage("§cErro: número do terreno não encontrado.")
+                        }
+                    }
+
+                    displayName.contains("Confirmar") -> {
+                        player.closeInventory()
+                        player.performCommand("plots confirm")
+                    }
+
+                    displayName.contains("Ajuda/Comandos") -> {
+                        player.closeInventory()
+                        player.performCommand("plots")
+                    }
+
+                    displayName.contains("Informações desse Terreno") -> {
+                        player.closeInventory()
+                        player.performCommand("plots info")
+                    }
                 }
             }
         }

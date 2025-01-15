@@ -1,9 +1,14 @@
 package ovinola.com.github.testePlotSquared.gui
 
+import com.intellectualcrafters.plot.api.PlotAPI
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
+import org.bukkit.metadata.FixedMetadataValue
+import ovinola.com.github.testePlotSquared.PlotManager
 import ovinola.com.github.testePlotSquared.util.CustomHeadUtil
+import ovinola.com.github.testePlotSquared.util.CustomItemUtil
 
 class ManagerGui {
 
@@ -14,6 +19,8 @@ class ManagerGui {
     fun openGui(player: Player, plotNumber: Int) {
         val inventory: Inventory = Bukkit.createInventory(null, (9 * 5), "GUI Secundário")
         manageGui = inventory
+
+        player.setMetadata("plotNumber", FixedMetadataValue(PlotManager.instance, plotNumber))
 
         val addPlayer = CustomHeadUtil.getCustomHead(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI1YjhlZWQ1YzU2NWJkNDQwZWM0N2M3OWMyMGQ1Y2YzNzAxNjJiMWQ5YjVkZDMxMDBlZDYyODNmZTAxZDZlIn19fQ==",
@@ -125,6 +132,86 @@ class ManagerGui {
             )
         )
 
+        val compass = CustomItemUtil.createCustomItem(
+            Material.COMPASS,
+            "&aTeleportar-se",
+            listOf(
+                "",
+                "&fClique para teleportar-se",
+                "&fpara o Terreno #${plotNumber}."
+            )
+        )
+
+        val confirm = CustomHeadUtil.getCustomHead(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTc5YTVjOTVlZTE3YWJmZWY0NWM4ZGMyMjQxODk5NjQ5NDRkNTYwZjE5YTQ0ZjE5ZjhhNDZhZWYzZmVlNDc1NiJ9fX0=",
+            "&aConfirmar",
+            listOf(
+                "",
+                "&fClique para confirmar ações pendentes."
+            )
+        )
+
+        val ajuda = CustomItemUtil.createCustomItem(
+            material = Material.MINECART,
+            displayName = "&aAjuda/Comandos",
+            lore = listOf("", "&fClique para receber a ajuda", "&fdos comandos no chat.")
+        )
+
+        val plotAPI = PlotAPI()
+        val plot = plotAPI.getPlot(player.location)
+        val infos = if (plot == null) {
+            CustomItemUtil.createCustomItem(
+                material = Material.ENDER_PEARL,
+                displayName = "&aVocê não está em uma plot",
+                lore = listOf("", "&fVocê não está dentro de uma plot.")
+            )
+        } else {
+            val plotId = plot.id
+            val ownerUUID = plot.owners.firstOrNull()
+            if (ownerUUID == null) {
+                CustomItemUtil.createCustomItem(
+                    material = Material.ENDER_PEARL,
+                    displayName = "&aVocê não está em uma plot",
+                    lore = listOf("", "&fVocê não está dentro de uma plot.")
+                )
+            } else {
+                val ownerName = Bukkit.getOfflinePlayer(ownerUUID).name ?: "N/A"
+                val biome = player.location.block.biome.name
+                val base64 = CustomHeadUtil.getBase64FromUUID(ownerUUID)
+                if (base64 != null) {
+                    CustomHeadUtil.getCustomHead(
+                        base64 = base64,
+                        displayName = "&aInformações desse Terreno",
+                        lore = listOf(
+                            "",
+                            "&fInformações do Terreno em que está:",
+                            "",
+                            "&fID:&7 $plotId",
+                            "&fDono:&7 $ownerName",
+                            "&fBioma:&7 $biome",
+                            "",
+                            "&fClique para receber mais informações."
+                        )
+                    )
+                } else {
+                    CustomItemUtil.createCustomItem(
+                        material = Material.SIGN,
+                        displayName = "&aInformações desse Terreno",
+                        lore = listOf(
+                            "",
+                            "&fInformações do Terreno $plotNumber",
+                            "",
+                            "&fID:&7 $plotId",
+                            "&fDono:&7 $ownerName",
+                            "&fBioma:&7 $biome",
+                            "",
+                            "&fClique para receber mais informações."
+                        )
+                    )
+                }
+            }
+        }
+
         inventory.setItem(11, addPlayer)
         inventory.setItem(12, trustPlayer)
         inventory.setItem(13, banPlayer)
@@ -134,6 +221,10 @@ class ManagerGui {
         inventory.setItem(22, setSpawn)
         inventory.setItem(23, setBioma)
         inventory.setItem(36, backArrow)
+        inventory.setItem(39, compass)
+        inventory.setItem(40, confirm)
+        inventory.setItem(41, ajuda)
+        inventory.setItem(44, infos)
 
         player.openInventory(inventory)
     }
