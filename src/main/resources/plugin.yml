@@ -6,3 +6,7 @@ commands:
     plot:
         description: Comando para abrir menu gui da plot
         usage: /plot
+        aliases:
+            - p
+            - plotme
+            - p h

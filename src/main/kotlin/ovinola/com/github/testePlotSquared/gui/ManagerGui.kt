@@ -177,38 +177,20 @@ class ManagerGui {
             } else {
                 val ownerName = Bukkit.getOfflinePlayer(ownerUUID).name ?: "N/A"
                 val biome = player.location.block.biome.name
-                val base64 = CustomHeadUtil.getBase64FromUUID(ownerUUID)
-                if (base64 != null) {
-                    CustomHeadUtil.getCustomHead(
-                        base64 = base64,
-                        displayName = "&aInformações desse Terreno",
-                        lore = listOf(
-                            "",
-                            "&fInformações do Terreno em que está:",
-                            "",
-                            "&fID:&7 $plotId",
-                            "&fDono:&7 $ownerName",
-                            "&fBioma:&7 $biome",
-                            "",
-                            "&fClique para receber mais informações."
-                        )
+                CustomItemUtil.createCustomItem(
+                    material = Material.SIGN,
+                    displayName = "&aInformações desse Terreno",
+                    lore = listOf(
+                        "",
+                        "&fInformações do Terreno $plotNumber",
+                        "",
+                        "&fID:&7 $plotId",
+                        "&fDono:&7 $ownerName",
+                        "&fBioma:&7 $biome",
+                        "",
+                        "&fClique para receber mais informações."
                     )
-                } else {
-                    CustomItemUtil.createCustomItem(
-                        material = Material.SIGN,
-                        displayName = "&aInformações desse Terreno",
-                        lore = listOf(
-                            "",
-                            "&fInformações do Terreno $plotNumber",
-                            "",
-                            "&fID:&7 $plotId",
-                            "&fDono:&7 $ownerName",
-                            "&fBioma:&7 $biome",
-                            "",
-                            "&fClique para receber mais informações."
-                        )
-                    )
-                }
+                )
             }
         }
 

@@ -1,13 +1,13 @@
 package ovinola.com.github.testePlotSquared.util
 
-import com.google.gson.JsonParser
+//import com.google.gson.JsonParser
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
-import java.net.URI
+//import java.net.URI
 import java.util.*
 
 object CustomHeadUtil {
@@ -36,23 +36,25 @@ object CustomHeadUtil {
         return skull
     }
 
-    fun getBase64FromUUID(uuid: UUID): String? {
-        val uri = URI("https://sessionserver.mojang.com/session/minecraft/profile/$uuid?unsigned=false")
-        val url = uri.toURL()
-        val connection = url.openConnection()
-        val parser = JsonParser()
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0")
-        connection.connect()
-
-        val response = connection.getInputStream().bufferedReader().use { it.readText() }
-        val json = parser.parse(response).asJsonObject
-        val properties = json.getAsJsonArray("properties")
-        for (property in properties) {
-            val propertyObj = property.asJsonObject
-            if (propertyObj.get("name").asString == "textures") {
-                return propertyObj.get("value").asString
-            }
-        }
-        return null
-    }
+    // -> ABRIR UMA ISSUE E PULL REQUEST CASO QUEIRA IMPLEMENTAR!!
+    // PARA ONLINE MODE TRUE FUNCIONA, APENAS REMOVER COMENTARIO
+//    fun getBase64FromUUID(uuid: UUID): String? {
+//        val uri = URI("https://sessionserver.mojang.com/session/minecraft/profile/$uuid?unsigned=false")
+//        val url = uri.toURL()
+//        val connection = url.openConnection()
+//        val parser = JsonParser()
+//        connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+//        connection.connect()
+//
+//        val response = connection.getInputStream().bufferedReader().use { it.readText() }
+//        val json = parser.parse(response).asJsonObject
+//        val properties = json.getAsJsonArray("properties")
+//        for (property in properties) {
+//            val propertyObj = property.asJsonObject
+//            if (propertyObj.get("name").asString == "textures") {
+//                return propertyObj.get("value").asString
+//            }
+//        }
+//        return null
+//    }
 }
