@@ -1,4 +1,4 @@
-name: TestePlotSquared
+name: PlotManager
 version: '1.0'
 main: ovinola.com.github.testePlotSquared.PlotManager
 api-version: '1.8.8'
@@ -6,7 +6,9 @@ commands:
     plot:
         description: Comando para abrir menu gui da plot
         usage: /plot
-        aliases:
-            - p
-            - plotme
-            - p h
+    plotme:
+        description: Comando para abrir menu gui da plot
+        usage: /plotme
+    p:
+        description: Comando para abrir menu gui da plot
+        usage: /p

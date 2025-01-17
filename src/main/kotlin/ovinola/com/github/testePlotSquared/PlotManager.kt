@@ -13,6 +13,8 @@ class PlotManager : JavaPlugin() {
 
     private fun regCmds() {
         getCommand("plot")?.executor = PlotCommand()
+        getCommand("plotme")?.executor = PlotCommand()
+        getCommand("p")?.executor = PlotCommand()
     }
 
     private fun regListeners() {
