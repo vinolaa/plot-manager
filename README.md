@@ -25,3 +25,5 @@ Abra um pull request neste repositório.
 
 **Discord:** discord.gg/neowest  
 **Fundador:** bebeel777
+
+![banner](https://github.com/user-attachments/assets/2171a177-fff4-4e34-8cfb-cae901072d14)
