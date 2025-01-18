@@ -24,4 +24,4 @@ Abra um pull request neste repositório.
 # **Contatos NeoWest**
 
 **Discord:** discord.gg/neowest  
-**Fundador** bebeel777
+**Fundador:** bebeel777
